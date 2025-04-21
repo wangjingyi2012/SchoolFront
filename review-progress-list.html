@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>作业打分列表</title>
+
+    <!-- 引入CSS样式 -->
+    <link rel="stylesheet" href="assets/vendor/css/core.css" />
+    <link rel="stylesheet" href="assets/vendor/css/theme-default.css" />
+    <link rel="stylesheet" href="assets/css/demo.css" />
+    <style>
+      .table {
+        width: 100%;
+        max-width: 900px;
+        margin: auto;
+        margin-top: 20px;
+        border-collapse: collapse;
+        text-align: left;
+      }
+      .table th, .table td {
+        padding: 12px;
+        border: 1px solid #ddd;
+      }
+      .table th {
+        background-color: #f4f4f4;
+        font-weight: bold;
+      }
+      .table td {
+        background-color: #fff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <h3 class="text-center">评分进度</h3>
+              
+              <!-- 评阅进度表格 -->
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>作业</th>
+                    <th>昵称</th>
+                    <th>得分</th>
+                    <th>打分时间</th>
+                    <th>状态</th>
+                  </tr>
+                </thead>
+                <tbody id="reviewProgressTableBody">
+                  <!-- 动态加载的数据将插入到这里 -->
+                </tbody>
+              </table>
+
+            </div>
+            <!-- / Content -->
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+      </div>
+    </div>
+    <!-- / Layout wrapper -->
+
+    <!-- JS脚本 -->
+    <script src="config.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const tableBody = document.getElementById('reviewProgressTableBody');
+        const apiUrl = `${configUrl.apiUrl}/homework/public/review-progress`;
+
+        // 获取评阅进度数据
+        fetch(apiUrl)
+          .then(response => response.json())
+          .then(data => {
+            if (data.code === '00000') {
+              const homeworkData = data.data;
+
+              // 遍历每个作业项，并添加到表格
+              homeworkData.forEach(item => {
+                const row = document.createElement('tr');
+
+                // 作业名称
+                const homeworkNameCell = document.createElement('td');
+                homeworkNameCell.textContent = item.homeworkName;
+                row.appendChild(homeworkNameCell);
+
+                // 学生姓名
+                const usernameCell = document.createElement('td');
+                usernameCell.textContent = item.username;
+                row.appendChild(usernameCell);
+
+                // 得分 (如果有)
+                const scoreCell = document.createElement('td');
+                scoreCell.textContent = item.score || '未评分';
+                row.appendChild(scoreCell);
+
+                // 评阅时间 (如果有)
+                const scoretimeCell = document.createElement('td');
+                scoretimeCell.textContent = item.scoretime || '未评阅';
+                row.appendChild(scoretimeCell);
+
+                // 状态
+                const statusCell = document.createElement('td');
+                statusCell.textContent = item.status;
+                row.appendChild(statusCell);
+
+                // 将生成的行插入表格
+                tableBody.appendChild(row);
+              });
+            } else {
+              alert('获取评阅进度失败：' + data.message);
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching review progress:', error);
+            alert('无法获取评阅进度，稍后重试');
+          });
+      });
+    </script>
+  </body>
+</html>

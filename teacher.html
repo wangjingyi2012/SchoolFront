@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>教师端作业评阅</title>
+
+    <link rel="stylesheet" href="assets/vendor/css/core.css" />
+    <link rel="stylesheet" href="assets/vendor/css/theme-default.css" />
+    <style>
+      .container {
+        display: flex;
+        height: 100vh;
+      }
+      .sidebar {
+        width: 20%;
+        padding: 10px;
+        border-right: 1px solid #ddd;
+        overflow-y: auto;
+      }
+      .student-list, .homework-details {
+        width: 40%;
+        padding: 10px;
+        border-right: 1px solid #ddd;
+        overflow-y: auto;
+      }
+      .homework-details {
+        width: 40%;
+        padding: 10px;
+      }
+      .student-item, .homework-item {
+        cursor: pointer;
+        margin: 5px 0;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+      }
+      .student-item:hover, .homework-item:hover {
+        background-color: #eee;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- 作业列表 -->
+      <div class="sidebar">
+        <h3>作业列表</h3>
+        <div id="homeworkList"></div>
+      </div>
+
+      <!-- 学生列表 -->
+      <div class="student-list">
+        <h3>学生列表</h3>
+        <div id="studentList"></div>
+      </div>
+
+      <!-- 作业详情 -->
+      <div class="homework-details">
+        <h3>作业详情</h3>
+        <div id="homeworkDetails"></div>
+      </div>
+    </div>
+
+    <!-- JS脚本 -->
+    <script src="config.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const homeworkListElement = document.getElementById('homeworkList');
+        const studentListElement = document.getElementById('studentList');
+        const homeworkDetailsElement = document.getElementById('homeworkDetails');
+
+        // 获取作业列表
+        fetch(`${configUrl.apiUrl}/homework/homework-list`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.code === '00000') {
+              const homeworkData = data.data;
+
+              homeworkData.forEach(homework => {
+                const homeworkItem = document.createElement('div');
+                homeworkItem.classList.add('homework-item');
+                homeworkItem.textContent = homework.name;
+                homeworkItem.addEventListener('click', () => loadStudents(homework.id));
+                homeworkListElement.appendChild(homeworkItem);
+              });
+            } else {
+              alert('获取作业列表失败');
+            }
+          });
+
+        // 加载学生列表
+        function loadStudents(homeworkId) {
+          studentListElement.innerHTML = ''; // 清空学生列表
+          fetch(`${configUrl.apiUrl}/student/all-review-students?hid=` + homeworkId)
+            .then(response => response.json())
+            .then(data => {
+              if (data.code === '00000') {
+                const students = data.data;
+
+                students.forEach(student => {
+                  const studentItem = document.createElement('div');
+                  studentItem.classList.add('student-item');
+                  studentItem.textContent = `${student.realname} (${student.username})`;
+                  studentItem.addEventListener('click', () => loadHomeworkDetails(student.id, homeworkId));
+                  studentListElement.appendChild(studentItem);
+                });
+              } else {
+                alert('获取学生列表失败');
+              }
+            });
+        }
+
+        // 加载学生作业详情
+        function loadHomeworkDetails(studentId, homeworkId) {
+          homeworkDetailsElement.innerHTML = ''; // 清空作业详情
+          fetch(`${configUrl.apiUrl}/teacher/homework/student-homework?sid=${studentId}&hid=${homeworkId}`)
+            .then(response => response.json())
+            .then(data => {
+              if (data.code === '00000') {
+                const homework = data.data;
+
+                // 创建作业详情的DOM元素
+                const homeworkContent = `
+                  <p><strong>作业状态：</strong> ${homework.status}</p>
+                  <p><strong>提交时间：</strong> ${homework.stime || '未提交'}</p>
+                  <p><strong>评语：</strong></p>
+                  <textarea id="teacherComment">${homework.tip || ''}</textarea>
+                  <p><strong>评分：</strong></p>
+                  <input type="number" id="homeworkScore" value="0" min="0" max="100" />
+
+                  <p><strong>查看作业文件：</strong> <a href="${homework.file}" target="_blank">点击查看</a></p>
+                  <button id="submitReviewButton">提交评分</button>
+                `;
+                homeworkDetailsElement.innerHTML = homeworkContent;
+
+                // 提交评阅
+                document.getElementById('submitReviewButton').addEventListener('click', function () {
+                  const tip = document.getElementById('teacherComment').value;
+                  const score = document.getElementById('homeworkScore').value;
+
+                  fetch(`${configUrl.apiUrl}/teacher/homework/review`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sid: studentId, hid: homeworkId, score, tip })
+                  })
+                    .then(response => response.json())
+                    .then(result => {
+                      if (result.code === '00000') {
+                        alert('评分提交成功');
+                      } else {
+                        alert('评分提交失败');
+                      }
+                    });
+                });
+              } else {
+                homeworkDetailsElement.innerHTML = '<p>作业未交</p>';
+              }
+            });
+        }
+      });
+    </script>
+  </body>
+</html>

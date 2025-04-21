@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>作业详情</title>
+
+    <!-- 引入CSS样式 -->
+    <link rel="stylesheet" href="assets/vendor/css/core.css" />
+    <link rel="stylesheet" href="assets/vendor/css/theme-default.css" />
+    <link rel="stylesheet" href="assets/css/demo.css" />
+    <style>
+      .card-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .form-label, .form-control, p {
+        width: 100%;
+        max-width: 600px;
+        text-align: left;
+      }
+
+      .btn {
+        margin-top: 20px;
+      }
+
+      .centered {
+        text-align: center;
+      }
+
+      #back-button, #reminder-button {
+        margin: 20px;
+      }
+
+      #reminder-button {
+        width: 200px;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <div class="row justify-content-center">
+                <div class="col-md-10">
+                  <!-- 返回作业列表按钮 -->
+                  <button id="back-button" class="btn btn-secondary">返回作业列表</button>
+
+                  <!-- 作业详情卡片 -->
+                  <div class="card mb-4">
+                    <div class="card-header centered">
+                      <h5 id="homework-title">作业详情</h5>
+                    </div>
+                    <div class="card-body">
+                      <p><strong>作业名称：</strong><span id="homework-name"></span></p>
+                      <p><strong>作业内容：</strong><span id="homework-content"></span></p>
+                      <p><strong>截止时间：</strong><span id="homework-endtime"></span></p>
+                      <p><strong>作业状态：</strong><span id="homework-status"></span></p>
+                      <p><strong>作业总分：</strong><span id="homework-score"></span></p>
+                      <hr>
+                      <p><strong>提交状态：</strong><span id="submit-status"></span></p>
+                      <p><strong>附言：</strong><span id="my-comment"></span></p>
+                      <p><strong>提交时间：</strong><span id="submit-time"></span></p>
+                      <p><strong>评语：</strong><span id="teacher-tip"></span></p>
+                      <p><strong>得分：</strong><span id="student-score"></span></p>
+                      <p><strong>提交顺序：</strong><span id="submit-order"></span></p>
+
+                      <!-- 上传作业 -->
+                      <form id="homework-form" class="centered" enctype="multipart/form-data">
+                        <div class="mb-3">
+                          <label for="file-input" class="form-label">上传作业 (仅支持pdf文件)</label>
+                          <input type="file" class="form-control" id="file-input" accept=".pdf" required />
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="comment" class="form-label">附言</label>
+                          <textarea class="form-control" id="comment" rows="3" placeholder="作业附言"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">提交作业</button>
+                      </form>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- / Content -->
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+      </div>
+    </div>
+    <!-- / Layout wrapper -->
+
+    <!-- JS脚本 -->
+    <script src="config.js"></script>
+    <script src="common2.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sid = studentId;  // 获取学生ID
+        const hid = urlParams.get('id');  // 获取作业ID
+        const apiUrl = `${configUrl.apiUrl}/homework/student-homework?sid=${sid}&hid=${hid}`;
+
+        // 获取作业详情并显示
+        fetch(apiUrl)
+          .then(response => response.json())
+          .then(data => {
+            if (data.code === '00000') {
+              const homework = data.data;
+
+              // 显示作业详情
+              document.getElementById('homework-title').textContent = "作业详情";
+              document.getElementById('homework-name').textContent = homework.homeworkName;
+              document.getElementById('homework-content').textContent = homework.homeworkContent;
+              document.getElementById('homework-endtime').textContent = homework.homeworkEndtime;
+              document.getElementById('homework-status').textContent = homework.homeworkStatus;
+              document.getElementById('homework-score').textContent = homework.homeworkScore;
+
+              // 显示提交状态和相关信息
+              document.getElementById('submit-status').textContent = homework.submitStatus;
+              document.getElementById('my-comment').textContent = homework.myComment || "无";
+              document.getElementById('submit-time').textContent = homework.submitTime || "未提交";
+              document.getElementById('teacher-tip').textContent = homework.teacherTip || "无";
+              document.getElementById('student-score').textContent = homework.studentScore || "未评分";
+              document.getElementById('submit-order').textContent = homework.submitOrder || "无";
+
+              // 如果作业已批阅，隐藏提交表单
+              if (homework.submitStatus === '已批阅') {
+                document.getElementById('homework-form').style.display = 'none';
+              }
+            } else {
+              alert('获取作业详情失败');
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching homework details:', error);
+          });
+
+        // 表单提交处理
+        document.getElementById('homework-form').addEventListener('submit', function (event) {
+          event.preventDefault(); 
+
+          const formData = new FormData();
+          const fileInput = document.getElementById('file-input');
+          const comment = document.getElementById('comment').value;
+
+          if (fileInput.files.length === 0) {
+            alert("上传文件先");
+            return;
+          }
+
+          formData.append('file', fileInput.files[0]);
+          formData.append('sid', sid);
+          formData.append('hid', hid);
+          formData.append('comment', comment);
+
+          // 发送文件上传请求
+          fetch(`${configUrl.apiUrl}/homework/student-homework-submit`, {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.code === '00000') {
+              alert("作业提交成功，等批阅");
+              // 提交成功后，可能会跳转或刷新页面
+              window.location.href = 'homework.html';
+            } else {
+              alert("作业提交失败：" + data.message);
+            }
+          })
+          .catch(error => {
+            console.error("提交作业时出错:", error);
+            alert("提交作业时出错，等会再试");
+          });
+        });
+
+        // 返回作业列表按钮点击事件
+        document.getElementById('back-button').addEventListener('click', function () {
+          window.location.href = 'homework.html'; 
+        });
+      });
+    </script>
+  </body>
+</html>

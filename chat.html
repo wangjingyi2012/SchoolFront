@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    <title>交流和问题反馈</title>
+
+    <meta name="description" content="" />
+
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon/favicon.ico" />
+
+    <link rel="stylesheet" href="assets/vendor/fonts/boxicons.css" />
+
+    <link rel="stylesheet" href="assets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="assets/css/demo.css" />
+
+    <link rel="stylesheet" href="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet"
+      href="h/default.min.css">
+    <script src="h/highlight.min.js"></script>
+
+
+    <script src="assets/vendor/js/helpers.js"></script>
+
+    <script src="assets/js/config.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          height: 100vh;
+      }
+      .chat-container {
+          flex: 1;
+          padding: 20px;
+          overflow-y: auto;
+      }
+      .chat-message {
+          margin-bottom: 12px;
+          padding: 10px;
+          background-color: #f1f1f1;
+          border-radius: 5px;
+      }
+      .chat-message.system {
+          margin-bottom: 12px;
+          padding: 10px;
+          background-color: #e4f5ed; /* 淡红色背景用于系统消息 */
+          border-radius: 5px;
+      }
+      .chat-input {
+          display: flex;
+          padding: 10px;
+      }
+      .chat-input input {
+          flex: 1;
+          padding: 10px;
+          margin-right: 10px;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+      }
+      .chat-input button {
+          padding: 10px 20px;
+          background-color: #007bff;
+          border: none;
+          border-radius: 5px;
+          color: white;
+          cursor: pointer;
+      }
+      .chat-input button:hover {
+          background-color: #0056b3;
+      }
+  </style>
+  <style>
+    .code-block {
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        overflow-x: auto;
+    }
+
+    .code-block code {
+        font-family: monospace;
+    }
+
+  </style>
+  
+    
+    
+  </head>
+
+  <body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+
+          <nav
+            class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+            id="layout-navbar"
+          >
+            <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+              <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                <i class="bx bx-menu bx-sm"></i>
+              </a>
+            </div>
+
+            <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+              学神辅助系统已绑定，所以你也是有系统的人了
+
+              <ul class="navbar-nav flex-row align-items-center ms-auto">
+                <!-- Place this tag where you want the button to render. -->
+                <li class="nav-item lh-1 me-3">
+                  <a
+                    class="github-button"
+                    href="#"
+                    data-icon="octicon-star"
+                    data-size="large"
+                    data-show-count="true"
+                    aria-label="Star html-admin-template-free on GitHub"
+                    >欢迎你哦</a
+                  >
+                </li>
+
+                <!-- User -->
+                <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                  
+                    <span class="realname fw-semibold d-block dropdown-toggle hide-arrow" data-bs-toggle="dropdown">？</span> 
+                  
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li>
+                        <a class="dropdown-item" href="#">
+                          <div class="d-flex">
+                            <div class="flex-shrink-0 me-3">
+                              <div class="avatar avatar-online">
+                                <img src="#" alt class="w-px-40 h-auto rounded-circle" id="avatar2"/>
+                              </div>
+                            </div>
+                            <div class="flex-grow-1">
+                              <span class="fw-semibold d-block" id="realname2"></span>
+                              <small class="text-muted" id="username2"></small>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
+                      <li>
+                        <div class="dropdown-divider"></div>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="#">
+                          <i class="bx bx-user me-2"></i>
+                          <span class="align-middle">个人数据</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="#">
+                          <i class="bx bx-cog me-2"></i>
+                          <span class="align-middle">设置</span>
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="#">
+                          <span class="d-flex align-items-center align-middle">
+                            <i class="flex-shrink-0 bx bx-credit-card me-2"></i>
+                            <span class="flex-grow-1 align-middle">学神系统</span>
+                            <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">👍</span>
+                          </span>
+                        </a>
+                      </li>
+                      <li>
+                        <div class="dropdown-divider"></div>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="auth-login-basic.html" id="logoutButton">
+                          <i class="bx bx-power-off me-2"></i>
+                          <span class="align-middle">登岀</span>
+                      </a>                    
+                      </li>
+                    </ul>
+                </li>
+                <!--/ User -->
+              </ul>
+            </div>
+          </nav>
+
+          <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">        
+              <div class="row">
+                <div class="col-md-12 ">
+                  <div class="chat-container" id="chatContainer">
+                  </div>
+                  <div class="chat-input">
+                      <input type="text" id="chatInput" placeholder="不要问太离谱的问题">
+                      <button onclick="sendMessage()">问一下</button>
+                  </div>
+                  
+                  
+                  
+                  
+                </div>
+              </div>
+            </div>
+            <!-- / Content -->
+
+            
+
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+      </div>
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+    <!-- / Layout wrapper -->
+
+
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="assets/vendor/libs/popper/popper.js"></script>
+    <script src="assets/vendor/js/bootstrap.js"></script>
+    <script src="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+
+    <script src="assets/vendor/js/menu.js"></script>
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+
+    <!-- Main JS -->
+    <script src="assets/js/main.js"></script>
+
+    <!-- Page JS -->
+    <script src="config.js"></script>
+    <script src="common2.js"></script>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          // Load chat history
+          fetch('http://www.hz-study-system.com:81/api/chat/chat-list?sid=' + studentId)
+              .then(response => response.json())
+              .then(data => {
+                  if (data.code === '00000' && data.data) {
+                      updateChatHistory(data.data);
+                  }
+              });
+      });
+    
+      function formatMessageText(text) {
+          // 将特殊字符转义
+          const escapedText = htmlspecialchars(text);
+
+          // 替换代码块，并添加语言标签
+          return escapedText.replace(/```(\w+)\n([\s\S]*?)```/g, (match, lang, code) => {
+              return `<div class="code-label">${lang}</div><pre class="code-block"><code class="${lang}">${code}</code></pre>`;
+          });
+      }
+
+      function typeMessage(message, callback) {
+        let index = 0;
+        const chatContainer = document.getElementById('chatContainer');
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('chat-message', 'system');
+        const messageContent = document.createElement('div'); 
+        messageDiv.appendChild(messageContent);
+        messageDiv.insertAdjacentHTML('afterbegin', '<strong>系统:</strong>');
+        chatContainer.appendChild(messageDiv);
+
+        const typingInterval = setInterval(() => {
+            if (index < message.length) {
+                const nextChar = message.charAt(index);
+                messageContent.textContent += nextChar;
+                index++;
+            } else {
+                clearInterval(typingInterval);
+
+                const formattedMessage = formatMessageText(messageContent.textContent);
+                messageContent.innerHTML = formattedMessage;
+                highlightCode(); // 应用代码高亮
+
+                if (callback) callback(); // 如果有回调函数，则执行
+
+                chatContainer.scrollTop = chatContainer.scrollHeight; // 滚动到最新消息
+            }
+        }, 90); // 调整打字速度
+}
+
+
+
+      // function formatMessageText(text) {
+      //     return text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+      // }
+
+
+      function highlightCode() {
+          document.querySelectorAll('pre code').forEach((block) => {
+              hljs.highlightBlock(block);
+          });
+      }
+
+
+      function htmlspecialchars(string) {  
+          return string  
+              .replace(/&/g, '&amp;')  
+              .replace(/</g, '&lt;')  
+              .replace(/>/g, '&gt;')  
+              .replace(/"/g, '&quot;')  
+              .replace(/'/g, '&#039;');  
+      }
+
+      function escapeHtml(text) {
+          return text
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+      }
+
+
+
+      function updateChatHistory(messages) {
+        const chatContainer = document.getElementById('chatContainer');
+        if (!chatContainer) {
+            console.error('Chat container not found');
+            return;
+        }
+        messages.forEach(message => {
+          const messageDiv = document.createElement('div');
+          messageDiv.classList.add('chat-message', message.sender === 'user' ? 'user' : 'system');
+          messageDiv.innerHTML = `
+              <strong>${message.username}:</strong>
+              <p>${formatMessageText(message.send)}</p>
+              <strong>系统：</strong>
+              <p>${formatMessageText(message.receive)}</p>
+          `;
+            chatContainer.appendChild(messageDiv);
+            highlightCode();
+        });
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+    
+      function sendMessage() {
+          const input = document.getElementById('chatInput');
+          const message = input.value.trim();
+          if (!message) {
+              return;
+          }
+
+          // Append user message
+          appendMessage(studentInfoData.username, message, 'user');
+          input.value = '';
+
+          // Disable send button and show loading
+          const sendButton = document.querySelector('.chat-input button');
+          sendButton.disabled = true;
+          const loadingSpinner = document.createElement('div');
+          loadingSpinner.className = 'spinner-border spinner-border-sm text-primary';
+          loadingSpinner.role = 'status';
+          loadingSpinner.innerHTML = '<span class="visually-hidden">Loading...</span>';
+          const chatContainer = document.getElementById('chatContainer');
+          chatContainer.appendChild(loadingSpinner);
+
+          // Send message to server and wait for response
+          fetch('http://www.hz-study-system.com:81/api/chat/send-question', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ sid: studentId, question: message }) // Use the correct student ID
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.code === '00000' && data.data) {
+                  // Type out the response
+                  typeMessage(formatMessageText(data.data), () => {
+                      sendButton.disabled = false;
+                      loadingSpinner.remove();
+                  });
+              } else {
+                  throw new Error('Failed to fetch response');
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              sendButton.disabled = false;
+              loadingSpinner.remove();
+          });
+      }
+
+    
+      function appendMessage(sender, message, type) {
+        const chatContainer = document.getElementById('chatContainer');
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('chat-message', type);
+        messageDiv.innerHTML = `<strong>${sender}:</strong><p></p>`;
+        const messageP = messageDiv.querySelector('p');
+        chatContainer.appendChild(messageDiv);
+
+        let index = 0;
+        const typingInterval = setInterval(() => {
+            if (index < message.length) {
+                messageP.textContent += message.charAt(index);
+                index++;
+            } else {
+                clearInterval(typingInterval);
+                // 重新格式化和高亮消息
+                messageP.innerHTML = formatMessageText(messageP.textContent);
+                highlightCode();  // 应用代码高亮
+            }
+        }, 50); // 调整打字速度
+
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+
+
+    </script>
+    
+
+
+  </body>
+</html>
